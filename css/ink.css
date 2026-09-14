@@ -1,0 +1,78 @@
+/* ==========================================================================
+   透明模块 —— 全屏透明手写层
+   要求：完全透明、不改变网站可视度；按钮所在区域不被笼罩；再按一次关闭
+   ========================================================================== */
+
+/* 手写画布：全屏、完全透明、盖在页面之上 */
+.ink-canvas{
+  position:fixed;inset:0;z-index:9000;
+  width:100vw;height:100vh;
+  background:transparent;          /* 关键：不加任何底色/模糊，可视度不变 */
+  touch-action:none;
+  cursor:crosshair;
+}
+
+/* 激活时的极细描边，仅提示"模块已开启"，不遮挡内容 */
+.ink-frame{
+  position:fixed;inset:8px;z-index:9001;pointer-events:none;
+  border:1.5px dashed rgba(229,72,127,.42);
+  border-radius:16px;
+}
+.ink-frame span{
+  position:absolute;left:50%;top:-11px;transform:translateX(-50%);
+  background:rgba(255,255,255,.94);color:#c0245f;font-size:11px;
+  padding:1px 10px;border-radius:8px;border:1px solid rgba(229,72,127,.28);
+  white-space:nowrap;
+}
+
+/* 工具坞：位于画布之上，这一块区域永远不被笼罩 */
+body.logged-out .ink-dock{display:none !important}
+.ink-dock{
+  position:fixed;right:20px;bottom:20px;z-index:9500;
+  display:flex;flex-direction:column;align-items:flex-end;gap:10px;
+  font-family:var(--font);
+}
+
+.ink-toggle{
+  display:flex;align-items:center;gap:8px;
+  border:1px solid rgba(229,72,127,.35);
+  background:linear-gradient(150deg,#f0699c,#d92e6c);
+  color:#fff;font-size:13.5px;font-weight:600;
+  padding:11px 17px;border-radius:999px;
+  box-shadow:0 8px 24px rgba(217,46,108,.34);
+  transition:.16s;
+}
+.ink-toggle:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.ink-toggle svg{width:17px;height:17px;fill:none;stroke:#fff;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ink-toggle.on{background:linear-gradient(150deg,#5b2b8a,#c0245f);box-shadow:0 8px 26px rgba(120,30,90,.4)}
+
+.ink-tools{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;
+  background:rgba(255,255,255,.97);border:1px solid rgba(229,72,127,.22);
+  border-radius:16px;padding:8px 10px;max-width:min(430px,86vw);
+  box-shadow:0 14px 40px rgba(160,80,120,.22);
+}
+.ink-tools .sep{width:1px;height:20px;background:#f0dbe6;margin:0 3px}
+.ink-tools .sw{
+  width:24px;height:24px;border-radius:50%;border:2px solid #fff;
+  background:var(--c);box-shadow:0 0 0 1.5px #e8d4e0;transition:.14s;padding:0;
+}
+.ink-tools .sw:hover{transform:scale(1.12)}
+.ink-tools .sw.on{box-shadow:0 0 0 2.5px #c0245f;transform:scale(1.14)}
+.ink-tools .sw.hl{box-shadow:0 0 0 1.5px #e8d4e0 inset,0 0 0 1.5px #e8d4e0}
+.ink-tools .tool{
+  border:1px solid var(--line-2);background:#fff;color:#7d6b74;
+  font-size:12.5px;padding:6px 11px;border-radius:9px;transition:.14s;
+}
+.ink-tools .tool:hover{border-color:#eab9cf;background:#fffafc;color:var(--rose-d)}
+.ink-tools .tool.on{background:#fff0f6;border-color:#f0bcd3;color:var(--rose-d);font-weight:600}
+
+/* 手写模式开启时，页面主体轻微上浮提示（不改可读性） */
+body.ink-on .topbar{box-shadow:0 1px 0 rgba(200,120,160,.10),0 6px 22px rgba(160,80,120,.10)}
+
+@media (max-width:720px){
+  .ink-dock{right:12px;bottom:12px}
+  .ink-toggle span{display:none}
+  .ink-toggle{padding:13px;border-radius:50%}
+  .ink-tools{max-width:92vw}
+}
